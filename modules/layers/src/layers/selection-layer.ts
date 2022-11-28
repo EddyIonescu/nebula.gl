@@ -25,14 +25,14 @@ const MODE_CONFIG_MAP = {
 };
 
 interface SelectionLayerProps<DataT> extends CompositeLayerProps<DataT> {
-  layerIds: any[];
+  layerIds: any[] | null;
   onSelect: (info: any) => any;
   selectionType: string | null;
 }
 
 const defaultProps: DefaultProps<SelectionLayerProps<any>> = {
   selectionType: SELECTION_TYPE.RECTANGLE,
-  layerIds: [],
+  layerIds: null,
   onSelect: () => {},
 };
 
@@ -124,12 +124,22 @@ export default class SelectionLayer<DataT, ExtraPropsT> extends CompositeLayer<
 
     // HACK, find a better way
     setTimeout(() => {
+      let selectionLayerIds = layerIds;
+      if (!selectionLayerIds) {
+        // Provide all visible and pickable layers to pickObjects when layerIds is not provided.
+        selectionLayerIds = this.context.layerManager
+          .getLayers()
+          .filter((layer) => layer.props.pickable && layer.props.visible)
+          .map((layer) => layer.props.id);
+      }
+
+      // @ts-ignore
       const pickingInfos = this.context.deck.pickObjects({
         x,
         y,
         width: maxX - x,
         height: maxY - y,
-        layerIds: [blockerId, ...layerIds],
+        layerIds: [blockerId, ...selectionLayerIds],
       });
 
       onSelect({
