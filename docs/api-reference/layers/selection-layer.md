@@ -81,6 +81,8 @@ Either `rectangle` or `polygon`
 
 Called when selection is completed.
 
-#### `layerIds` (String[], required)
+#### `layerIds` (String[], optional)
 
-Array of layer ids where we will search.
+- Default: `null`
+
+Array of layer ids where we will search. If not specified, then all pickable and visible layers are searched.
