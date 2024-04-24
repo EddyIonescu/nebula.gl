@@ -210,7 +210,7 @@ describe('parseImport()', () => {
         expect(importData.valid).toEqual(false);
         expect(importData.validationErrors).toEqual([
           'Error parsing GeoJSON',
-          'SyntaxError: Unexpected token a in JSON at position 1',
+          "SyntaxError: Expected property name or '}' in JSON at position 1",
         ]);
       });
     });
